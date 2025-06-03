@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f6fa; }
+        .container { max-width: 340px; margin: 50px auto; background: #fff; padding: 32px; border-radius: 12px; box-shadow: 0 2px 12px #0002; }
+        h2 { text-align: center; }
+        label { display: block; margin-top: 16px; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
+        button { margin-top: 20px; width: 100%; padding: 12px; background: #5360ba; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; }
+        .msg { margin-top: 16px; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>회원가입</h2>
+    <form id="signupForm">
+        <label for="email">이메일</label>
+        <input type="email" id="email" required>
+
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" required>
+
+        <label for="confirmPassword">비밀번호 확인</label>
+        <input type="password" id="confirmPassword" required>
+
+        <label for="nickname">닉네임</label>
+        <input type="text" id="nickname" required>
+
+        <label for="birthday">생년월일</label>
+        <input type="date" id="birthday" required>
+
+        <label for="gender">성별</label>
+        <select id="gender" required>
+            <option value="">선택</option>
+            <option value="남">남</option>
+            <option value="여">여</option>
+        </select>
+
+        <button type="submit">회원가입</button>
+    </form>
+    <div class="msg" id="msg"></div>
+</div>
+<script>
+    document.getElementById('signupForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const body = {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            confirmPassword: document.getElementById('confirmPassword').value,
+            nickname: document.getElementById('nickname').value,
+            birthday: document.getElementById('birthday').value,
+            gender: document.getElementById('gender').value
+        };
+        document.getElementById('msg').textContent = '처리 중...';
+
+        const res = await fetch('/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        const text = await res.text();
+        document.getElementById('msg').textContent = text;
+        if (res.status === 201) {
+            document.getElementById('signupForm').reset();
+        }
+    };
+</script>
+</body>
+</html>
